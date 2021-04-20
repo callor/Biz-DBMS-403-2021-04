@@ -47,11 +47,31 @@ CREATE TABLE tbl_score (
     sc_math NUMBER
 );
 
+-- DML(Data Manipulation Lang. 
+--      Data Management Lang, 데이터 조작어, 데이터 관리)
+-- 생성된 TABLE에 데이터추가, 조회, 수정, 삭제를 하는 명령어
+-- DBMS 대표적인 CRUD 업무
+--  데이터추가(데이터 생성 : create 업무) : INSERT
+--  데이터조회(읽기 등등 : Read) : SELECT
+--  데이터변경, 수정 : UPDATE
+--  데이터삭제 : DELETE
+INSERT INTO tbl_score(sc_num, sc_kor, sc_eng, sc_math)
+VALUES ('00001',90,80,70);
 
+INSERT INTO tbl_score(sc_name) VALUES('홍길동');
+INSERT INTO tbl_score(sc_name) VALUES('성춘향');
+INSERT INTO tbl_score(sc_name) VALUES('이몽룡');
 
+-- 데이터 읽기
+SELECT sc_num, sc_kor, sc_eng, sc_math
+FROM tbl_score;
 
+SELECT sc_name FROM tbl_score;
 
+UPDATE tbl_score
+SET sc_name = '임꺽정';
 
+SELECT sc_name FROM tbl_score;
 
 
 
