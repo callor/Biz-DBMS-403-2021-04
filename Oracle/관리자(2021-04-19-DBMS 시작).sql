@@ -31,7 +31,7 @@ SIZE 10M  AUTOEXTEND ON NEXT 10K;
 
 -- DROP : CREATE로 생성한 개체(Object, 요소)를 제거하는 명령
 DROP TABLESPACE mydb
-INCLUDING CONTENTS AND DATAFILES
+INCLUDING CONTENTS; AND DATAFILES
 CASCADE CONSTRAINTS;
 
 -- 2. 사용자 생성하기
@@ -70,3 +70,6 @@ DEFAULT TABLESPACE mydb;
 -- 오라클에서는 새로운 사용자를 생성한 직후에는
 -- 아무런 권한도 부여되지 않은 상태이다.
 -- 심지어 접속(login) 자체가 되지 않는다.
+
+
+select tablespace_name, status, contents from dba_tablespaces;
