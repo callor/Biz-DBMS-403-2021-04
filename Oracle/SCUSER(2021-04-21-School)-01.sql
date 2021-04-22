@@ -114,6 +114,8 @@ SELECT *
 FROM tbl_student
 WHERE st_num = '00001';
 
+SELECT * FROM tbl_student;
+
 
 
 
