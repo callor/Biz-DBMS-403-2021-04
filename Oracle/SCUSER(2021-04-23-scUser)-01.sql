@@ -52,10 +52,81 @@ CREATE TABLE tbl_score(
     PRIMARY KEY (sc_num)
 );
 
+CREATE TABLE tbl_score(
+    sc_num	CHAR(5)	PRIMARY KEY,
+    sc_kor	NUMBER	NOT NULL,	
+    sc_eng	NUMBER	NOT NULL,	
+    sc_math	NUMBER	NOT NULL	
+);
+SELECT * FROM tbl_score;
 
+-- 국어점수가 90점 이상인 리스트
+SELECT * FROM tbl_score
+WHERE sc_kor >= 90;
 
+-- 데이터를 보여줄때 머릿글(칼럼제목)을 바꾸어서 보이기
+-- AS(Alias, 별명) 
+SELECT sc_num AS 학번, 
+        sc_kor AS 국어,sc_eng AS 영어, sc_math AS 수학,
+        sc_kor + sc_eng + sc_math AS 총점
+FROM tbl_score;
 
+-- 총점이 250 이상인 학생만 보여라
+SELECT sc_num AS 학번, 
+        sc_kor AS 국어,sc_eng AS 영어, sc_math AS 수학,
+        sc_kor + sc_eng + sc_math AS 총점
+FROM tbl_score
+WHERE (sc_kor + sc_eng + sc_math) >= 250;
 
+-- 총점이 150 이상이고 250이하 인 학생만 보여라
+SELECT sc_num AS 학번, 
+        sc_kor AS 국어,sc_eng AS 영어, sc_math AS 수학,
+        sc_kor + sc_eng + sc_math AS 총점
+FROM tbl_score
+WHERE (sc_kor + sc_eng + sc_math) >= 250 
+        AND (sc_kor + sc_eng + sc_math) <= 150;
+
+-- SELECT를 사용하여 데이트를 조회하는데
+-- 계산하는 칼럼도 있고
+-- 자꾸 문법이 복잡해 지려고 한다
+-- SELECT 된 명령문을 VIEW 객체로 생성을 해둔다
+-- VIEW 는 사용법이 TABLE과 같다
+--      단, 기본은 SELECT만 된다.
+CREATE VIEW view_score
+AS
+(
+    SELECT sc_num AS 학번, 
+            sc_kor AS 국어,sc_eng AS 영어, sc_math AS 수학,
+            sc_kor + sc_eng + sc_math AS 총점
+    FROM tbl_score
+);
+
+SELECT * 
+FROM view_score
+WHERE 총점 >= 150 AND 총점 <= 250;
+
+-- 영어선생님에게 전체학생의 정보를 보여줘야 한다
+-- 다른과목의 점수는 감추고 싶다
+-- 보안적인 측면에서 사용자별로
+-- 보여줄항목, 보이지 않을 항목을 선별하여 VIEW작성해 두면
+-- 불필요한 정보가 노출되는 것을 최소화 할수 있다
+CREATE VIEW view_영어점수
+AS
+(
+    SELECT sc_num AS 학번, sc_eng AS 영어
+    FROM tbl_score
+);
+
+DROP VIEW view_1반학생;
+CREATE VIEW view_1반학생
+AS
+(
+    SELECT sc_num AS 학번, 
+    sc_eng AS 영어, sc_kor AS 국어,sc_math AS 수학
+    FROM tbl_score
+    WHERE sc_num >= 'S0010' AND sc_num <= 'S0020'
+);
+SELECT * FROM view_1반학생;
 
 
 
