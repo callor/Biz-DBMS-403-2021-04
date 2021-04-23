@@ -126,7 +126,7 @@ GROUP BY 총점;
 COMMIT;
 
 
-
+ㄴㅊ
 
 
 
