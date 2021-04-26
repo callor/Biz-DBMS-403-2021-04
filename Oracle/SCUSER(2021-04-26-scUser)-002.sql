@@ -1,0 +1,2 @@
+-- 여기는 SCUSER
+SELECT * FROM VIEW_성적정보;
