@@ -106,6 +106,10 @@ SELECT SUBSTR(출판일,0,4) AS 출판년도 FROM view_도서정보;
 -- 출판일 칼럼의 데이터를 오른쪽으로 부터 4글자만 잘라서 보여라
 SELECT SUBSTR(출판일,-5) AS 출판월일 FROM view_도서정보;
 
+-- 1 OR 1 = 1
+DELETE FROM tbl_books 
+WHERE bk_isbn = 1 OR 1 = 1 ;
+commit ;
 
 
 
