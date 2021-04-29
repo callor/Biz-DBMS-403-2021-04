@@ -185,7 +185,7 @@ VALUES( 37,'9791162540572','홍길동');
 
 
 
-
+SELECT * FROM tbl_author;
 
 
 
