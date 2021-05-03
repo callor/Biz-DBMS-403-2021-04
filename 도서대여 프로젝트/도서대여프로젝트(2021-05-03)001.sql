@@ -143,12 +143,14 @@ FROM tbl_book_rent BR
 -- FROM 절에 표현된 Table 데이터 위주로 조회하고자 할때
 -- FK 설정되지 않아도 데이터 조회는 모두 할 수 있다
 -- 단 JOIN 된 테이블에 데이터가 없으면 (null)로 표현된다
+DROP VIEW view_도서대여정보;
 CREATE VIEW view_도서대여정보 AS
 (
     SELECT 
         BR.br_sdate AS 대여일,
         BR.br_bcode AS 회원코드,
         BU.bu_name AS 회원명,
+        BU.bu_tel AS 회원연락처,
         BR.br_isbn AS ISBN,
         BK.bk_title AS 도서명,
         BR.br_edate AS 반납일,
@@ -177,6 +179,127 @@ FROM view_도서대여정보 BR
     LEFT JOIN tbl_buyer BU
         ON BR.회원코드 = BU.bu_code
 WHERE 대여일 < '2021-04-25' AND 반납일 IS NULL;        
+
+-- 중복된 데이터가 있으면 그룹으로 묶어서
+-- 단순하게 보여달라
+SELECT 대여일,회원코드, 회원명, BU.bu_tel
+FROM view_도서대여정보 BR
+    LEFT JOIN tbl_buyer BU
+        ON BR.회원코드 = BU.bu_code
+WHERE 대여일 < '2021-04-25' AND 반납일 IS NULL
+GROUP BY 대여일,회원코드, 회원명, BU.bu_tel;
+
+/*
+위의 코드는 전체 데이터중에서 대여일과 반납일에 조건을 부여한후
+데이터를 간추리고, 간추려진 데이터를 GROUP으로 묶어 보여주기
+
+아래 코드는 전체 데이터를 GROUP으로 묶고
+묶인 데이터를 조건에 맞는 항목만 보여주기
+
+이 두 코드는 결과는 같지만
+실행하는 성능은 매우 많은 차이가 난다
+데이터가 많을 수록 성능 차이는 매우 극명하게 나타난다
+*/
+
+SELECT 대여일,회원코드, 회원명, BU.bu_tel
+FROM view_도서대여정보 BR
+    LEFT JOIN tbl_buyer BU
+        ON BR.회원코드 = BU.bu_code
+GROUP BY 대여일,회원코드, 회원명, BU.bu_tel, 반납일
+HAVING 대여일 < '2021-04-25' AND 반납일 IS NULL;
+
+-- 예시)
+/*
+ 학생이름  과목  점수
+ ----------------------
+ 홍길동    국어  50
+ 홍길동    영어  50
+ 홍길동    수학  50
+ 홍길동    과학  50
+ 이몽룡    국어  90
+ 이몽룡    영어  80
+ 이몽룡    수학  70
+ 이몽룡    과학  70
+ ----------------------
+ 홍길동    250
+ 이몽룡    310
+ 이 데이터에서 홍길동 학생의 4과목 총점을 계산하기 위한 코드
+ */ 
+SELECT 학생이름, SUM(점수)
+FROM tbl_score
+GROUP BY 학생이름
+HAVING SUM(점수) > 250;
+
+
+-- tbl_score에서 과학, 수학 2과목의 점수만 총점을 계산하고 싶다
+SELECT 학생이름, SUM(점수)
+FROM tbl_score
+WHERE 과목 = '과학' OR 과목 = '수학'
+GROUP BY 학생이름;
+
+-- 직업별로 급여의 합계 계산하기
+SELECT 직업, SUM(급어)
+FROM tbl_급여
+GROUP BY 직업;
+
+-- 직업별로 급여를 합계 계산할때
+-- 직업이 영업직 인 사람을 제외하고 싶다
+SELECT 직업,SUM(급여)
+FROM tbl_급여
+WHERE 직업 != '영업직'
+GROUP BY 직업;
+
+SELECT 직업,SUM(급여)
+FROM tbl_급여
+GROUP BY 직업
+HAVING 직업 != '영업직';
+
+-- 급여테이블에서 영업직을 제외한 직업의 급여 총합계를 계산하고
+-- 총 합계가 3000000 이상인 데이터만 보여라
+SELECT 직업,SUM(급여)
+FROM tbl_급여
+WHERE 직업 != '영업직'
+GROUP BY 직업
+HAVING SUM(급여) >= 3000000;
+
+-- 급여테이블에서 영업직을 제외하고
+-- 실 급여가 1000000을 초과하는 데이터만 합산하여 보여라
+SELECT 직업,SUM(급여)
+FROM tbl_급여
+WHERE 직업 != '영업직' AND 급여 > 1000000
+GROUP BY 직업;
+
+-- 대여일이 2021-04-25 이전이고 아직 미납된 데이터
+SELECT *  FROM view_도서대여정보
+WHERE 대여일 < '2021-04-25' AND 반납일 IS NULL;
+
+SELECT 대여일, 회원코드, 회원명, 회원연락처, 도서명
+FROM view_도서대여정보
+WHERE 대여일 < '2021-04-25' AND 반납일 IS NULL
+GROUP BY 대여일, 회원코드, 회원명, 회원연락처, 도서명;
+
+INSERT INTO tbl_book_rent(br_seq,
+            br_sdate, br_bcode, br_isbn)
+VALUES ( seq_book_rent.NEXTVAL,
+            '2021-04-01','B0011','9791188850266');
+
+INSERT INTO tbl_book_rent(br_seq,
+            br_sdate, br_bcode, br_isbn)
+VALUES ( seq_book_rent.NEXTVAL,
+            '2021-04-01','B0011','9791188850389');
+
+-- 대여일이 2021-04-25일 이전이고 아직 미반납된
+-- 대여정보를 보여라
+-- 그리고 회원코드순으로 보여라
+SELECT 대여일, 회원코드, 회원명, 회원연락처, 도서명
+FROM view_도서대여정보
+WHERE 대여일 < '2021-04-25' AND 반납일 IS NULL
+GROUP BY 대여일, 회원코드, 회원명, 회원연락처, 도서명
+ORDER BY 회원코드;
+
+
+
+
 
 
 
