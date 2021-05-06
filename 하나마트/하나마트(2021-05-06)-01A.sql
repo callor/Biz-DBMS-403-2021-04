@@ -101,6 +101,107 @@ SELECT io_dname,
 FROM tbl_iolist
 GROUP BY io_dname;
 
+-- 상품별로 매입과 매출 합계
+SELECT io_pname,
+    SUM(DECODE(io_inout,'매입',io_total,0)) AS 매입합계,
+    SUM(DECODE(io_inout,'매출',io_total,0)) AS 매출합계
+FROM tbl_iolist
+GROUP BY io_pname;
+
+-- 2020-01-01 부터 2020-06-30 기간동안
+-- 거래된 리스트를 거래처별로 조회
+SELECT * FROM tbl_iolist
+WHERE io_date BETWEEN '01/01/2020' AND '06/01/20020'; 
+
+-- 기간동안 거래처별 매입 매출 합계
+SELECT io_dname,
+    SUM(DECODE(io_inout,'매입',io_total,0)) AS 매입,
+    SUM(DECODE(io_inout,'매출',io_total,0)) AS 매출
+FROM tbl_iolist
+WHERE io_date BETWEEN '01/01/2020' AND '06/01/2020'
+GROUP BY io_dname
+ORDER BY io_dname;
+
+-- 전체데이터에서 상품 리스트만 중복없이 조회
+-- 상품리스트와 매입, 매출단가를 조회하기
+-- 같은 상품이라도 거래 시기에 따라 매입과 매출금액이
+-- 달라질수 있기 때문에
+-- 단가 데이터중에서 제일 높은 단가를 가져오기
+SELECT io_pname,
+    MAX(DECODE(io_inout,'매입',io_price,0)) AS 매입단가,
+    MAX(DECODE(io_inout,'매출',io_price,0)) AS 매출단가
+FROM tbl_iolist
+GROUP BY io_pname
+ORDER BY io_pname;
+/*
+매입매출 데이터로 부터 상품정보 테이블 데이터를 생성하기
+1. 매입매출 데이터에서 상품명으로 그룹을 하고
+2. 매입, 매출 구분에 따라 각각 매입단가, 매출단가를 가져오기
+3. 매입과 매출에 0인 값이 있다
+
+4. 매입단가가 0인 데이터는 매출데이터에서 임의로 생성하기
+ 매출단가의 80%를 매입단가로 하고, 부가세를 제외한 금액으로 계산
+ E2 항목의 값에 0.8을 곱하여 80% 가격이 되고
+ 다시 그 금액을 1.1로 나누면 부가세를 제외한 가격이 된다.
+ =ROUND(IF(C2 = 0,((E2 * 0.8)/1.1),C2),0)
+
+5. 매출단가가 0인 데이터는 매입데이터에서 임의로 생성하기
+매입단가의 20%를 추가하고 부가세 10%를 추가 
+        매입단가 + 20% + 10%
+        
+=IF( E2=0, INT( ( D2 * 1.2 ) * 1.1 )/10 * 10, E2 )
+ 10원 단위 이상으로 계산하기
+*/
+
+
+
+-- 전체데이터에서 거래처 리스트만 중복없이 조회
+SELECT io_dname,io_dceo
+FROM tbl_iolist
+GROUP BY io_dname,io_dceo
+ORDER BY io_dname;
+
+-- 상품정보 테이블
+-- DEFAULT 속성
+--  INSERT를 수행할때 값이 지정되지 않으면
+--  자동으로 추가될 데이터
+--  자동으로 NOT NULL로 설정된다
+CREATE TABLE tbl_product(
+    p_code	CHAR(6)		PRIMARY KEY,
+    p_name	nVARCHAR2(50)	NOT NULL,	
+    p_iprice	NUMBER	NOT NULL,	
+    p_oprice	NUMBER	NOT NULL,	
+    p_vat	VARCHAR2(1)	DEFAULT 'Y'	
+) ;
+
+SELECT * FROM tbl_product;
+
+CREATE TABLE tbl_dept (
+    dp_code	CHAR(5)		PRIMARY KEY,
+    dp_name	nVARCHAR2(50)	NOT NULL,	
+    dp_ceo	nVARCHAR2(50)	NOT NULL,	
+    dp_tel	VARCHAR2(20),		
+    dp_addr	nVARCHAR2(125)		
+
+);
+SELECT * FROM tbl_dept;
+
+/*
+매입매출 데이터로 부터
+상품정보, 거래처정보 데이터를 생성하고
+테이블을 생성하여 데이터를 import 했다
+
+매입매출데이터와, 상품정보, 거래처정보를
+JOIN하기 위해서는 매입매출데이터에 상품코드, 거래처코드가 
+있어야 한다.
+그러나 현재 데이터를 코드 칼럼이 없이 이름 칼럼만 있는 상태이다
+
+매입매출 데이터에 상품코드, 거래처코드 칼럼을 추가하고
+세 table을 JOIN할수 있도록 변경하기
+
+
+*/
+
 
 
 
