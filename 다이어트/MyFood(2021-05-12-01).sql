@@ -153,12 +153,6 @@ CREATE VIEW view_섭취량계산 AS (
 );            
 
 
-
-
-
-
-
-
 INSERT INTo tbl_myfoods(mf_seq, mf_fcode, mf_date,mf_amt)
 VALUES(seq_myfoods.NEXTVAL,'PD00001','2021-05-12',2);
 
