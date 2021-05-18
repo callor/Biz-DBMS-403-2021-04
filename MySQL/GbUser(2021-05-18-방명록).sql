@@ -77,3 +77,34 @@ SELECT
 	IF(MOD(FLOOR(RAND() * 100) ,2) = 0,
     '짝수','홀수') ;
 
+SELECT COUNT(*) FROM tbl_guest_book;
+SELECT * FROM tbl_guest_book;
+
+SELECT * FROM tbl_guest_book
+WHERE gb_writer = '지눌';
+
+SELECT * FROM tbl_guest_book
+ORDER BY gb_date DESC, gb_time DESC;
+
+SELECT * FROM tbl_guest_book
+WHERE gb_content 
+LIKE '%국가%';
+
+SELECT * FROM tbl_guest_book
+WHERE gb_content 
+LIKE '%국가%'
+ORDER BY gb_date DESC, gb_time DESC;
+
+CREATE VIEW view_방명록 AS (
+	SELECT gb_seq AS '일련번호',
+			gb_date AS '등록일자',
+			gb_time AS '등록시간',
+			gb_writer AS '등록자이름',
+			gb_email AS '등록Email',
+			gb_password AS '비밀번호',
+			gb_content AS '내용'
+	FROM tbl_guest_book
+);    
+SELECT * FROM view_방명록;
+
+
