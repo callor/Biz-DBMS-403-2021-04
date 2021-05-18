@@ -62,6 +62,7 @@ mysql_native_password
 BY '12345';
 flush privileges;
 
-
+SELECT * FROM USER
+WHERE User='gbUser';
 
 
