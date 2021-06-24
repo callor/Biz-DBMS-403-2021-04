@@ -1,0 +1,13 @@
+DB 연결 정보
+jdbc:oracle:thin:@localhost:1521:xe
+
+
+C:\Program Files\MySQL\MySQL Server 8.0\bin\mysqld.exe" --defaults-file="C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+
+mysqld.exe --skip-grant-tables --defaults-file="C:\ProgramData\MySQL\MySQL Server 8.0\my.ini
+
+
+mysqld --init-file=C:\\mysql-init.txt --defaults-file="C:\\ProgramData\\MySQL\\MySQL Server 8.0\\my.ini"
+
+mysqld --defaults-file="C:\\ProgramData\\MySQL\\MySQL Server 8.0\\my.ini" --init-file=C:\\my-init.txt
+mysqld --defaults-file="C:\\ProgramData\\MySQL\\MySQL Server 8.0\\my.ini" --init-file=C:\\mysql-init.txt
