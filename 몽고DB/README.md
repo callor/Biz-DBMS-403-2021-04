@@ -2,7 +2,7 @@
 
 - NoSQL DBMS의 한 종류
 - NoSQL : Not Only SQL, Non Relational Operation DataBase SQL
-- MySQL, Oracle 등의 RDBMS와 구별되는 행태의 DB를 NoSQL이라고 한다
+- MySQL, Oracle 등의 RDBMS와 구별되는 형태의 DB를 NoSQL이라고 한다
 
 ## RDBMS
 
